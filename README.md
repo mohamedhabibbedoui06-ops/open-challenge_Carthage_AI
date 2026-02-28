@@ -4,7 +4,9 @@ A clean, self-contained version of the platform. No Docker, no Redis, no Celery.
 
 # 🎥 Project Demo Video
 
-[![Watch the demo]https://drive.google.com/file/d/16niQtdvZhS8kyX-2X_nA2rfTXs74RtAr/view?usp=sharing]
+❗❗❗
+👉 https://drive.google.com/file/d/16niQtdvZhS8kyX-2X_nA2rfTXs74RtAr/view?usp=sharing
+❗❗❗
 
 ## Project Structure
 
