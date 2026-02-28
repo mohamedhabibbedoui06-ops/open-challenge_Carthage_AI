@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VISIT.AI — Tunisia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  ::-webkit-scrollbar{display:none;}
+  body{min-height:100vh;background:#0D1117;display:flex;align-items:center;justify-content:center;font-family:sans-serif;padding:20px;}
+
+  :root{
+    --teal:#0D6E5C;--teal-light:#1A9B84;--teal-dark:#084D40;
+    --gold:#D4922A;--gold-light:#F0B84A;
+    --sand:#F5EFE0;--sand-dark:#EAE0CC;
+    --night:#0A1F1C;--night-mid:#122820;
+    --white:#FFFFFF;--off-white:#F8F5EF;
+    --gray:#8A9E9A;--gray-light:#DCE8E5;
+    --red:#E05252;--green:#2EAF7D;
+  }
+
+  .proto-label{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;
+    background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.15);border-radius:50px;
+    padding:8px 20px;font-family:'Syne',sans-serif;font-size:11px;
+    font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:2px;
+  }
+  .phone{
+    width:390px;height:844px;border-radius:54px;overflow:hidden;
+    position:relative;
+    box-shadow:0 40px 120px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.1),inset 0 0 0 2px rgba(255,255,255,0.05);
+    border:8px solid #1A1A1A;
+  }
+  .phone-inner{width:100%;height:100%;overflow:hidden;position:relative;}
+
+  /* NAV BUTTONS */
+  .nav-buttons{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:600px;z-index:100;
+  }
+  .nav-btn{
+    padding:7px 14px;border-radius:50px;cursor:pointer;
+    font-family:'Syne',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.5px;
+    border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);
+    color:rgba(255,255,255,0.5);transition:all 0.2s;
+  }
+  .nav-btn.active{
+    background:rgba(26,155,132,0.3);border-color:rgba(26,155,132,0.5);
+    color:#1A9B84;
+  }
+
+  /* SCREENS */
+  .screen{width:100%;height:100%;position:absolute;top:0;left:0;display:none;flex-direction:column;overflow:hidden;}
+  .screen.active{display:flex;}
+
+  /* STATUS BAR */
+  .status-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 20px 6px;font-size:12px;font-weight:700;
+    font-family:'Syne',sans-serif;letter-spacing:0.5px;
+  }
+  .status-bar .icons{display:flex;gap:6px;align-items:center;}
+
+  /* BOTTOM NAV */
+  .bottom-nav{
+    display:flex;justify-content:space-around;align-items:center;
+    padding:10px 0 18px;
+    border-top:1px solid var(--gray-light);
+    flex-shrink:0;
+  }
+  .bottom-nav.dark{background:var(--night);border-top-color:rgba(255,255,255,0.08);}
+  .bottom-nav.light{background:var(--white);}
+  .nav-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    background:none;border:none;cursor:pointer;
+    color:var(--gray);font-family:'Syne',sans-serif;
+  }
+  .nav-item.active{color:var(--teal-light);}
+  .nav-item .icon{font-size:22px;line-height:1;}
+  .nav-item .label{font-size:10px;font-weight:500;letter-spacing:0.5px;}
+  .nav-item.active .label{font-weight:700;}
+
+  /* ─── SPLASH ─── */
+  #splash{background:var(--night);align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  #splash .bg-glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(13,110,92,0.25),transparent);}
+  #splash .ring1{position:absolute;bottom:-60px;left:-60px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(26,155,132,0.19);}
+  #splash .ring2{position:absolute;bottom:-100px;left:-100px;width:380px;height:380px;border-radius:50%;border:1px solid rgba(26,155,132,0.09);}
+  #splash .ring3{position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;border:1px solid rgba(212,146,42,0.12);}
+  #splash .logo-box{width:88px;height:88px;border-radius:28px;margin:0 auto 20px;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 20px 60px rgba(13,110,92,0.38);}
+  #splash .logo-title{font-family:'Syne',sans-serif;font-weight:800;font-size:36px;color:var(--white);letter-spacing:-1px;line-height:1;}
+  #splash .logo-sub{font-family:'Crimson Text',serif;font-style:italic;font-size:16px;color:var(--teal-light);margin-top:6px;letter-spacing:2px;}
+  #splash .loading{font-family:'Syne',sans-serif;font-size:12px;color:var(--gray);letter-spacing:3px;margin-top:40px;animation:pulse 1.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+
+  /* ─── ONBOARDING ─── */
+  #onboarding{transition:background 0.5s;}
+  #onboarding .slide-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;}
+  #onboarding .slide-emoji{font-size:80px;margin-bottom:32px;}
+  #onboarding h1{font-family:'Syne',sans-serif;font-weight:800;font-size:42px;color:var(--white);text-align:center;line-height:1.1;margin-bottom:16px;white-space:pre-line;}
+  #onboarding p{font-family:'Crimson Text',serif;font-size:18px;color:rgba(255,255,255,0.7);text-align:center;line-height:1.6;}
+  #onboarding .dots-row{display:flex;gap:8px;}
+  .dot{height:8px;border-radius:4px;background:rgba(255,255,255,0.3);transition:all 0.3s;}
+  .dot.active{width:24px;background:var(--gold-light);}
+  .dot.inactive{width:8px;}
+  #onboarding .ob-btn{
+    width:100%;padding:18px 0;border-radius:16px;
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    color:var(--night);border:none;cursor:pointer;
+    font-family:'Syne',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;
+    box-shadow:0 8px 30px rgba(212,146,42,0.31);
+  }
+
+  /* ─── HOME ─── */
+  #home{background:var(--off-white);}
+  .home-header{background:linear-gradient(160deg,var(--night) 0%,var(--night-mid) 100%);padding:0 0 32px;border-radius:0 0 32px 32px;}
+  .greeting-sub{font-family:'Syne',sans-serif;font-size:12px;color:var(--gray);letter-spacing:2px;}
+  .greeting-name{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--white);margin-top:2px;}
+  .avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .search-bar{background:rgba(255,255,255,0.08);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.12);}
+  .search-bar span{font-family:'Syne',sans-serif;font-size:14px;color:var(--gray);}
+  .home-content{flex:1;overflow-y:auto;padding:24px 0 16px;}
+
+  /* Quick Actions */
+  .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px;margin-bottom:28px;}
+  .qa-btn{border:none;border-radius:20px;padding:20px 16px;cursor:pointer;text-align:left;}
+  .qa-btn .qa-icon{font-size:28px;margin-bottom:8px;}
+  .qa-btn .qa-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;}
+  .qa-btn .qa-sub{font-family:'Syne',sans-serif;font-size:10px;margin-top:2px;letter-spacing:1px;}
+
+  /* Featured */
+  .section-header{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:14px;}
+  .section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--night);}
+  .see-all{font-family:'Syne',sans-serif;font-size:11px;color:var(--teal);letter-spacing:1px;}
+  .cards-scroll{display:flex;gap:14px;padding:0 20px;overflow-x:auto;padding-bottom:4px;}
+  .feat-card{min-width:150px;border-radius:20px;overflow:hidden;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.15);flex-shrink:0;}
+  .feat-emoji{height:100px;display:flex;align-items:center;justify-content:center;font-size:48px;}
+  .feat-info{padding:10px 14px 14px;}
+  .feat-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--white);}
+  .feat-tag{font-family:'Syne',sans-serif;font-size:10px;color:rgba(255,255,255,0.65);margin-top:2px;letter-spacing:0.5px;}
+
+  /* Weather */
+  .weather-strip{margin:24px 20px 0;background:var(--white);border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gray-light);}
+  .w-sub{font-family:'Syne',sans-serif;font-size:11px;color:var(--gray);letter-spacing:1px;}
+  .w-val{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--night);margin-top:2px;}
+
+  /* ─── TRIP WIZARD ─── */
+  #trip-wizard{background:var(--off-white);}
+  .wizard-header{background:var(--white);padding:0 0 20px;border-radius:0 0 24px 24px;box-shadow:0 2px 16px rgba(0,0,0,0.06);flex-shrink:0;}
+  .wizard-back{background:none;border:none;cursor:pointer;font-size:20px;color:var(--night);}
+  .wizard-step-label{font-family:'Syne',sans-serif;font-size:11px;color:var(--gray);letter-spacing:2px;}
+  .wizard-step-title{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--night);margin-top:2px;}
+  .progress-bar-row{display:flex;gap:6px;padding:14px 20px 0;}
+  .prog-seg{flex:1;height:4px;border-radius:2px;background:var(--gray-light);transition:background 0.3s;}
+  .prog-seg.done{background:var(--teal);}
+  .wizard-body{flex:1;overflow-y:auto;padding:24px 20px;}
+  .wizard-footer{padding:16px 20px 32px;background:var(--white);border-top:1px solid var(--gray-light);flex-shrink:0;}
+  .wizard-next{width:100%;padding:18px 0;border-radius:16px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:var(--white);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;box-shadow:0 8px 24px rgba(13,110,92,0.25);}
+
+  /* Date cards */
+  .date-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .date-card{padding:18px 12px;border-radius:14px;border:2px solid var(--gray-light);background:var(--white);cursor:pointer;text-align:center;font-family:'Syne',sans-serif;font-weight:600;font-size:13px;color:var(--night);transition:all 0.2s;}
+  .date-card.sel{border-color:var(--teal);background:rgba(13,110,92,0.09);}
+  .date-from{font-size:13px;}
+  .date-to{font-size:11px;color:var(--gray);}
+
+  /* Budget */
+  .budget-btn{width:100%;padding:18px 20px;border-radius:14px;margin-bottom:10px;border:2px solid var(--gray-light);background:var(--white);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Syne',sans-serif;font-weight:500;font-size:15px;color:var(--night);transition:all 0.2s;}
+  .budget-btn.sel{border-color:var(--teal);background:rgba(13,110,92,0.09);font-weight:700;color:var(--teal);}
+  .budget-dots{color:var(--gold);}
+
+  /* Activities */
+  .act-wrap{display:flex;flex-wrap:wrap;gap:10px;}
+  .act-chip{padding:12px 16px;border-radius:50px;border:2px solid var(--gray-light);background:var(--white);cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;font-size:13px;color:var(--night);transition:all 0.2s;}
+  .act-chip.sel{border-color:var(--teal);background:rgba(13,110,92,0.09);color:var(--teal);}
+
+  /* Travel type */
+  .travel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .travel-btn{padding:24px 12px;border-radius:16px;border:2px solid var(--gray-light);background:var(--white);cursor:pointer;text-align:center;font-family:'Syne',sans-serif;font-weight:500;font-size:13px;color:var(--night);transition:all 0.2s;}
+  .travel-btn.sel{border-color:var(--teal);background:rgba(13,110,92,0.09);font-weight:700;color:var(--teal);}
+  .travel-icon{font-size:28px;margin-bottom:8px;}
+
+  /* ─── GENERATING ─── */
+  #generating{background:var(--night);align-items:center;justify-content:center;padding:0 40px;}
+  .gen-ring{width:120px;height:120px;border-radius:50%;margin-bottom:40px;display:flex;align-items:center;justify-content:center;position:relative;}
+  .gen-inner{width:96px;height:96px;border-radius:50%;background:var(--night);display:flex;align-items:center;justify-content:center;font-size:36px;}
+  #generating h2{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:var(--white);text-align:center;margin-bottom:12px;}
+  .gen-label{font-family:'Crimson Text',serif;font-size:16px;color:var(--teal-light);text-align:center;margin-bottom:32px;font-style:italic;}
+  .gen-bar-bg{width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;}
+  .gen-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:2px;transition:width 0.4s;}
+  .gen-pct{font-family:'Syne',sans-serif;font-size:12px;color:var(--gray);margin-top:10px;}
+
+  /* ─── ITINERARIES ─── */
+  #itineraries{background:var(--off-white);}
+  .itin-header{background:var(--night);padding:0 0 20px;border-radius:0 0 24px 24px;flex-shrink:0;}
+  .itin-list{flex:1;overflow-y:auto;padding:20px 20px 16px;}
+  .itin-card{background:var(--white);border-radius:20px;margin-bottom:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);cursor:pointer;border:2px solid transparent;}
+  .itin-card.best{border-color:var(--teal);}
+  .itin-card-header{padding:20px 20px 16px;}
+  .itin-tag{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;background:rgba(255,255,255,0.2);color:var(--white);padding:3px 10px;border-radius:20px;}
+  .itin-name{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);margin:8px 0 4px;}
+  .itin-meta{font-family:'Syne',sans-serif;font-size:12px;color:rgba(255,255,255,0.7);}
+  .itin-price{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);}
+  .itin-price-sub{font-family:'Syne',sans-serif;font-size:10px;color:rgba(255,255,255,0.6);}
+  .itin-body{padding:14px 20px 18px;}
+  .itin-hi-label{font-family:'Syne',sans-serif;font-size:11px;color:var(--gray);letter-spacing:1px;margin-bottom:10px;}
+  .hi-chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .hi-chip{padding:5px 12px;border-radius:50px;background:var(--off-white);font-family:'Syne',sans-serif;font-size:11px;color:var(--night);font-weight:600;}
+  .view-plan{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;margin-top:16px;display:flex;justify-content:flex-end;}
+
+  /* ─── ITINERARY DETAIL ─── */
+  #itinerary-detail{background:var(--off-white);}
+  .detail-header{padding:0 0 24px;border-radius:0 0 28px 28px;flex-shrink:0;}
+  .detail-back{background:rgba(255,255,255,0.2);border:none;cursor:pointer;font-size:18px;color:var(--white);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .detail-map{margin:16px 20px 0;height:120px;border-radius:16px;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.6);font-family:'Syne',sans-serif;border:1px solid rgba(255,255,255,0.15);}
+  .detail-content{flex:1;overflow-y:auto;padding:20px 20px 16px;}
+  .card-white{background:var(--white);border-radius:16px;padding:16px 18px;margin-bottom:16px;}
+  .section-label{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:var(--night);margin-bottom:14px;}
+  .budget-row{margin-bottom:10px;}
+  .budget-row-top{display:flex;justify-content:space-between;margin-bottom:4px;}
+  .budget-cat{font-family:'Syne',sans-serif;font-size:12px;color:var(--gray);}
+  .budget-amt{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--night);}
+  .bar-bg{height:6px;background:var(--gray-light);border-radius:3px;}
+  .bar-fill{height:100%;border-radius:3px;}
+  .day-card{background:var(--white);border-radius:16px;padding:16px 18px;margin-bottom:12px;}
+  .day-badge{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;}
+  .day-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--night);}
+  .day-sub{font-family:'Syne',sans-serif;font-size:11px;color:var(--gray);}
+  .day-item{font-family:'Syne',sans-serif;font-size:13px;color:var(--night);padding:6px 0;border-bottom:1px solid var(--gray-light);}
+  .day-item:last-child{border-bottom:none;}
+  .detail-footer{padding:16px 20px 32px;background:var(--white);border-top:1px solid var(--gray-light);flex-shrink:0;}
+  .book-btn{width:100%;padding:18px 0;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--night);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;box-shadow:0 8px 24px rgba(212,146,42,0.25);}
+
+  /* ─── BOOKING ─── */
+  #booking{background:var(--off-white);}
+  .book-list{flex:1;overflow-y:auto;padding:20px;}
+  .book-item{background:var(--white);border-radius:16px;padding:16px 18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;}
+  .book-icon{font-size:32px;}
+  .book-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--night);}
+  .book-sub{font-family:'Syne',sans-serif;font-size:12px;color:var(--gray);margin-top:2px;}
+  .book-price{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--teal);}
+  .book-status{font-family:'Syne',sans-serif;font-size:10px;letter-spacing:0.5px;margin-top:2px;}
+  .book-footer{padding:16px 20px 32px;background:var(--white);border-top:1px solid var(--gray-light);flex-shrink:0;}
+  .book-total-label{font-family:'Syne',sans-serif;font-size:14px;color:var(--gray);}
+  .book-total-val{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--night);}
+  .pay-btn{width:100%;padding:18px 0;border-radius:16px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:var(--white);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;box-shadow:0 8px 24px rgba(13,110,92,0.25);}
+
+  /* ─── EXPLORE ─── */
+  #explore{background:var(--off-white);}
+  .explore-header{background:var(--night);padding:0 0 16px;border-radius:0 0 24px 24px;flex-shrink:0;}
+  .filter-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;}
+  .filter-chip{flex-shrink:0;padding:8px 16px;border-radius:50px;background:rgba(255,255,255,0.1);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--gray);letter-spacing:0.5px;transition:all 0.2s;}
+  .filter-chip.active{background:var(--teal-light);color:var(--white);}
+  .explore-list{flex:1;overflow-y:auto;padding:16px 20px;}
+  .exp-card{background:var(--white);border-radius:16px;margin-bottom:12px;overflow:hidden;cursor:pointer;display:flex;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+  .exp-thumb{width:88px;display:flex;align-items:center;justify-content:center;font-size:36px;}
+  .exp-info{flex:1;padding:14px 16px;}
+  .exp-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--night);}
+  .exp-dist{font-family:'Syne',sans-serif;font-size:10px;color:var(--teal);font-weight:700;}
+  .exp-crowd{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.5px;}
+  .exp-time{font-family:'Syne',sans-serif;font-size:10px;color:var(--gray);}
+  .exp-co2{font-family:'Syne',sans-serif;font-size:10px;color:var(--green);}
+
+  /* ─── LOCATION DETAIL ─── */
+  #location-detail{background:var(--off-white);}
+  .loc-hero{height:200px;position:relative;display:flex;align-items:flex-end;}
+  .loc-hero-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;}
+  .loc-back{position:absolute;top:44px;left:20px;background:rgba(0,0,0,0.4);border:none;cursor:pointer;font-size:18px;color:var(--white);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .loc-info-bar{padding:16px 20px;background:linear-gradient(transparent,rgba(0,0,0,0.7));width:100%;}
+  .loc-name{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);}
+  .loc-meta{font-family:'Syne',sans-serif;font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;}
+  .loc-tags{display:flex;gap:10px;margin-bottom:16px;}
+  .loc-tag{padding:6px 12px;border-radius:50px;background:var(--white);font-family:'Syne',sans-serif;font-size:11px;color:var(--night);font-weight:700;border:1px solid var(--gray-light);}
+  .crowd-chart{display:flex;gap:4px;align-items:flex-end;height:60px;}
+  .crowd-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .crowd-bar-inner{width:100%;border-radius:3px 3px 0 0;}
+  .crowd-bar-label{font-family:'Syne',sans-serif;font-size:8px;color:var(--gray);}
+  .loc-footer{padding:16px 20px 32px;background:var(--white);border-top:1px solid var(--gray-light);display:flex;gap:12px;flex-shrink:0;}
+  .loc-btn-dir{flex:1;padding:16px 0;border-radius:14px;background:var(--off-white);color:var(--night);border:1.5px solid var(--gray-light);cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;}
+  .loc-btn-ar{flex:2;padding:16px 0;border-radius:14px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:var(--white);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;}
+
+  /* ─── MUSEUMS ─── */
+  #museums{background:var(--night);}
+  .museums-header{padding:0 0 16px;flex-shrink:0;}
+  .mus-list{flex:1;overflow-y:auto;padding:0 20px 16px;}
+  .mus-card{border-radius:20px;margin-bottom:14px;padding:24px 20px;cursor:pointer;position:relative;overflow:hidden;}
+  .mus-bg-emoji{position:absolute;right:-20px;top:-20px;font-size:100px;opacity:0.15;}
+  .mus-badge{display:inline-block;background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px;margin-bottom:10px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--white);letter-spacing:2px;}
+  .mus-name{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--white);margin-bottom:4px;}
+  .mus-sub{font-family:'Syne',sans-serif;font-size:12px;color:rgba(255,255,255,0.7);}
+  .mus-launch{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--gold-light);margin-top:16px;}
+
+  /* ─── VR ─── */
+  #vr-experience{background:#0A0520;position:relative;overflow:hidden;}
+  .vr-glow{position:absolute;inset:0;background:radial-gradient(ellipse 100% 60% at 50% 60%,rgba(61,31,110,0.38),transparent);}
+  .vr-fade{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(transparent,#0A0520);}
+  .vr-header{position:absolute;top:0;left:0;right:0;z-index:10;padding:44px 20px 0;display:flex;justify-content:space-between;align-items:center;}
+  .vr-back{background:rgba(255,255,255,0.15);border:none;cursor:pointer;font-size:18px;color:var(--white);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .vr-label{font-family:'Syne',sans-serif;font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:2px;background:rgba(255,255,255,0.1);padding:6px 14px;border-radius:20px;}
+  .vr-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:5;padding:0 32px;padding-top:100px;}
+  .vr-emoji{font-size:96px;margin-bottom:8px;filter:drop-shadow(0 0 40px #7A40CC);}
+  .vr-title{font-family:'Syne',sans-serif;font-weight:800;font-size:30px;color:var(--white);text-align:center;margin-bottom:8px;}
+  .vr-sub{font-family:'Crimson Text',serif;font-size:17px;color:#B09AE0;text-align:center;font-style:italic;margin-bottom:32px;}
+  .vr-stats{display:flex;gap:16px;margin-bottom:36px;}
+  .vr-stat-val{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--white);text-align:center;}
+  .vr-stat-sub{font-family:'Syne',sans-serif;font-size:10px;color:#8060B0;letter-spacing:1px;text-align:center;}
+  .vr-play{width:80px;height:80px;border-radius:50%;border:none;cursor:pointer;font-size:32px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:all 0.3s;}
+  .vr-play-label{font-family:'Syne',sans-serif;font-size:12px;color:#8060B0;letter-spacing:1px;}
+  .vr-footer{position:relative;z-index:5;padding:0 20px 48px;display:flex;gap:12px;}
+  .vr-action{flex:1;padding:14px 0;border-radius:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--white);cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;}
+
+  /* ─── BUSINESS LOGIN ─── */
+  #business-login{background:var(--night);}
+  .biz-content{flex:1;display:flex;flex-direction:column;padding:20px 28px;justify-content:center;}
+  .biz-back{align-self:flex-start;background:rgba(255,255,255,0.1);border:none;cursor:pointer;font-size:18px;color:var(--white);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:40px;}
+  .biz-title{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:var(--white);line-height:1.1;margin-bottom:8px;}
+  .biz-sub{font-family:'Crimson Text',serif;font-size:16px;color:var(--gray);margin-bottom:40px;font-style:italic;}
+  .biz-field{background:rgba(255,255,255,0.06);border-radius:14px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,0.1);}
+  .biz-field span{font-family:'Syne',sans-serif;font-size:14px;color:var(--gray);}
+  .biz-login{width:100%;padding:18px 0;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--night);border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;box-shadow:0 8px 30px rgba(212,146,42,0.31);}
+
+  /* ─── DASHBOARD ─── */
+  #dashboard{background:var(--off-white);}
+  .dash-header{background:var(--night);padding:0 0 20px;border-radius:0 0 24px 24px;flex-shrink:0;}
+  .dash-plan-badge{background:rgba(13,110,92,0.19);padding:6px 12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:11px;color:var(--teal-light);}
+  .dash-content{flex:1;overflow-y:auto;padding:20px 20px 16px;}
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+  .kpi-card{background:var(--white);border-radius:16px;padding:16px 14px;}
+  .kpi-icon{font-size:22px;margin-bottom:6px;}
+  .kpi-val{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--night);}
+  .kpi-label{font-family:'Syne',sans-serif;font-size:10px;color:var(--gray);margin-top:2px;}
+  .kpi-delta{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;margin-top:4px;}
+  .chart-bars{display:flex;gap:6px;align-items:flex-end;height:80px;}
+  .chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .chart-val-label{font-family:'Syne',sans-serif;font-size:9px;color:var(--night);font-weight:700;}
+  .chart-bar-inner{width:100%;border-radius:4px 4px 0 0;opacity:0.85;}
+  .chart-day{font-family:'Syne',sans-serif;font-size:9px;color:var(--gray);}
+  .chart-legend{display:flex;gap:16px;margin-top:12px;}
+  .legend-dot{width:10px;height:10px;border-radius:2px;}
+  .legend-label{font-family:'Syne',sans-serif;font-size:10px;color:var(--gray);}
+  .ai-insight{background:rgba(13,110,92,0.09);border-radius:16px;padding:16px 18px;border:1.5px solid rgba(13,110,92,0.19);margin-bottom:16px;display:flex;gap:10px;align-items:flex-start;}
+  .ai-label{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--teal);letter-spacing:1px;margin-bottom:6px;}
+  .ai-text{font-family:'Crimson Text',serif;font-size:15px;color:var(--night);line-height:1.5;}
+  .sub-card{background:var(--night);border-radius:16px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;}
+  .sub-plan{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--white);}
+  .sub-renew{font-family:'Syne',sans-serif;font-size:11px;color:var(--gray);margin-top:2px;}
+  .sub-manage{padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;color:var(--night);}
+
+  /* FLEX ROW UTILITY */
+  .row{display:flex;align-items:center;}
+  .row.sb{justify-content:space-between;}
+</style>
+</head>
+<body>
+
+<div class="proto-label">VISIT.AI TUNISIA · PROTOTYPE</div>
+
+<div class="phone">
+  <div class="phone-inner">
+
+    <!-- ─── SPLASH ─── -->
+    <div id="splash" class="screen active">
+      <div class="bg-glow"></div>
+      <div class="ring1"></div><div class="ring2"></div><div class="ring3"></div>
+      <div style="position:relative;text-align:center;">
+        <div class="logo-box">🌍</div>
+        <div class="logo-title">VISIT<span style="color:var(--gold-light)">.</span>AI</div>
+        <div class="logo-sub">Tunisia</div>
+      </div>
+      <div class="loading">LOADING YOUR JOURNEY...</div>
+    </div>
+
+    <!-- ─── ONBOARDING ─── -->
+    <div id="onboarding" class="screen">
+      <div class="status-bar" style="color:var(--white);">
+        <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="slide-body">
+        <div class="slide-emoji" id="ob-emoji"></div>
+        <h1 id="ob-title"></h1>
+        <p id="ob-sub"></p>
+      </div>
+      <div style="padding:0 32px 48px;display:flex;flex-direction:column;align-items:center;gap:20px;">
+        <div class="dots-row" id="ob-dots"></div>
+        <button class="ob-btn" id="ob-btn">CONTINUE</button>
+      </div>
+    </div>
+
+    <!-- ─── HOME ─── -->
+    <div id="home" class="screen">
+      <div class="home-header">
+        <div class="status-bar" style="color:var(--white);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 24px 0;">
+          <div class="row sb" style="margin-bottom:20px;">
+            <div>
+              <div class="greeting-sub">BONJOUR,</div>
+              <div class="greeting-name">Mohamed Habib</div>
+            </div>
+            <div class="avatar">👤</div>
+          </div>
+          <div class="search-bar">
+            <span style="font-size:18px;">🔍</span>
+            <span>Search destinations...</span>
+          </div>
+        </div>
+      </div>
+      <div class="home-content">
+        <div class="quick-grid">
+          <button class="qa-btn" onclick="goTo('trip-wizard')" style="background:linear-gradient(135deg,var(--teal),var(--teal-light));box-shadow:0 8px 24px rgba(13,110,92,0.25);">
+            <div class="qa-icon">✈️</div>
+            <div class="qa-title" style="color:var(--white);">Plan a Trip</div>
+            <div class="qa-sub" style="color:rgba(255,255,255,0.7);">AI ITINERARY</div>
+          </button>
+          <button class="qa-btn" onclick="goTo('explore')" style="background:linear-gradient(135deg,var(--gold),var(--gold-light));box-shadow:0 8px 24px rgba(212,146,42,0.25);">
+            <div class="qa-icon">📍</div>
+            <div class="qa-title" style="color:var(--night);">Explore Now</div>
+            <div class="qa-sub" style="color:rgba(0,0,0,0.5);">REAL-TIME</div>
+          </button>
+          <button class="qa-btn" onclick="goTo('museums')" style="background:var(--white);border:1.5px solid var(--gray-light);">
+            <div class="qa-icon">🏛️</div>
+            <div class="qa-title" style="color:var(--night);">Museums</div>
+            <div class="qa-sub" style="color:var(--gray);">VR / AR</div>
+          </button>
+          <button class="qa-btn" onclick="goTo('business-login')" style="background:var(--night-mid);border:1.5px solid rgba(255,255,255,0.08);">
+            <div class="qa-icon">📊</div>
+            <div class="qa-title" style="color:var(--white);">Business</div>
+            <div class="qa-sub" style="color:var(--gray);">DASHBOARD</div>
+          </button>
+        </div>
+        <div>
+          <div class="section-header">
+            <span class="section-title">Trending Now</span>
+            <span class="see-all">SEE ALL</span>
+          </div>
+          <div class="cards-scroll">
+            <div class="feat-card" style="background:#1A6B8A;" onclick="goTo('location-detail')">
+              <div class="feat-emoji">🏘️</div>
+              <div class="feat-info"><div class="feat-name">Sidi Bou Said</div><div class="feat-tag">Village · 12km</div></div>
+            </div>
+            <div class="feat-card" style="background:#7A4F2A;" onclick="goTo('location-detail')">
+              <div class="feat-emoji">🏖️</div>
+              <div class="feat-info"><div class="feat-name">Djerba Island</div><div class="feat-tag">Beach · 500km</div></div>
+            </div>
+            <div class="feat-card" style="background:#4A3270;" onclick="goTo('location-detail')">
+              <div class="feat-emoji">🏛️</div>
+              <div class="feat-info"><div class="feat-name">Carthage Ruins</div><div class="feat-tag">History · 8km</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="weather-strip">
+          <div><div class="w-sub">TUNIS TODAY</div><div class="w-val">24°C · Sunny</div></div>
+          <div style="font-size:36px;">☀️</div>
+        </div>
+      </div>
+      <div class="bottom-nav light" id="home-nav">
+        <button class="nav-item active" onclick="goTo('home')"><span class="icon">⌂</span><span class="label">HOME</span></button>
+        <button class="nav-item" onclick="goTo('explore')"><span class="icon">◎</span><span class="label">EXPLORE</span></button>
+        <button class="nav-item" onclick="goTo('museums')"><span class="icon">⬡</span><span class="label">MUSEUMS</span></button>
+        <button class="nav-item" onclick="goTo('home')"><span class="icon">◉</span><span class="label">PROFILE</span></button>
+      </div>
+    </div>
+
+    <!-- ─── TRIP WIZARD ─── -->
+    <div id="trip-wizard" class="screen">
+      <div class="wizard-header">
+        <div class="status-bar" style="color:var(--night);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 20px 0;display:flex;align-items:center;gap:12px;">
+          <button class="wizard-back" onclick="goTo('home')">←</button>
+          <div>
+            <div class="wizard-step-label" id="wiz-step-label">STEP 1 OF 4</div>
+            <div class="wizard-step-title" id="wiz-step-title">When are you travelling?</div>
+          </div>
+        </div>
+        <div class="progress-bar-row" id="wiz-progress"></div>
+      </div>
+      <div class="wizard-body" id="wiz-body"></div>
+      <div class="wizard-footer">
+        <button class="wizard-next" id="wiz-next-btn" onclick="wizardNext()">CONTINUE →</button>
+      </div>
+    </div>
+
+    <!-- ─── GENERATING ─── -->
+    <div id="generating" class="screen">
+      <div class="gen-ring" id="gen-ring">
+        <div class="gen-inner">🤖</div>
+      </div>
+      <h2>AI is crafting<br>your Tunisia...</h2>
+      <div class="gen-label" id="gen-label">Analyzing your preferences...</div>
+      <div class="gen-bar-bg"><div class="gen-bar-fill" id="gen-fill" style="width:0%"></div></div>
+      <div class="gen-pct" id="gen-pct">0%</div>
+    </div>
+
+    <!-- ─── ITINERARIES ─── -->
+    <div id="itineraries" class="screen">
+      <div class="itin-header">
+        <div class="status-bar" style="color:var(--white);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 20px 0;display:flex;align-items:center;gap:12px;">
+          <button onclick="goTo('trip-wizard')" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--white);">←</button>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--gray);letter-spacing:2px;">YOUR RESULTS</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);margin-top:2px;">3 Itineraries Ready ✦</div>
+          </div>
+        </div>
+      </div>
+      <div class="itin-list">
+        <div class="itin-card best" onclick="selectPlan(0)" style="border-color:var(--teal);">
+          <div class="itin-card-header" style="background:var(--teal);">
+            <div class="row sb">
+              <div><div class="itin-tag">BEST MATCH</div><div class="itin-name">⭐ Optimized</div><div class="itin-meta">7 days · ⭐ 4.9</div></div>
+              <div style="text-align:right;"><div class="itin-price">850 TND</div><div class="itin-price-sub">TOTAL</div></div>
+            </div>
+          </div>
+          <div class="itin-body">
+            <div class="itin-hi-label">HIGHLIGHTS</div>
+            <div class="hi-chips">
+              <span class="hi-chip">Sidi Bou Said</span><span class="hi-chip">Carthage</span><span class="hi-chip">Hammamet Beach</span><span class="hi-chip">Sfax Medina</span>
+            </div>
+            <div class="view-plan" style="color:var(--teal);">VIEW FULL PLAN →</div>
+          </div>
+        </div>
+        <div class="itin-card" onclick="selectPlan(1)">
+          <div class="itin-card-header" style="background:#6B4E3D;">
+            <div class="row sb">
+              <div><div class="itin-tag">HIDDEN GEMS</div><div class="itin-name">💎 Discovery</div><div class="itin-meta">7 days · ⭐ 4.7</div></div>
+              <div style="text-align:right;"><div class="itin-price">820 TND</div><div class="itin-price-sub">TOTAL</div></div>
+            </div>
+          </div>
+          <div class="itin-body">
+            <div class="itin-hi-label">HIGHLIGHTS</div>
+            <div class="hi-chips">
+              <span class="hi-chip">Dougga Ruins</span><span class="hi-chip">Tataouine</span><span class="hi-chip">El Kef</span><span class="hi-chip">Ain Draham</span>
+            </div>
+            <div class="view-plan" style="color:#6B4E3D;">VIEW FULL PLAN →</div>
+          </div>
+        </div>
+        <div class="itin-card" onclick="selectPlan(2)">
+          <div class="itin-card-header" style="background:#4A3270;">
+            <div class="row sb">
+              <div><div class="itin-tag">+15% UPGRADE</div><div class="itin-name">✨ Premium</div><div class="itin-meta">7 days · ⭐ 5.0</div></div>
+              <div style="text-align:right;"><div class="itin-price">1,080 TND</div><div class="itin-price-sub">TOTAL</div></div>
+            </div>
+          </div>
+          <div class="itin-body">
+            <div class="itin-hi-label">HIGHLIGHTS</div>
+            <div class="hi-chips">
+              <span class="hi-chip">Luxury Djerba</span><span class="hi-chip">Private Sahara</span><span class="hi-chip">Boutique Tunis</span><span class="hi-chip">Yacht Day</span>
+            </div>
+            <div class="view-plan" style="color:#4A3270;">VIEW FULL PLAN →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ITINERARY DETAIL ─── -->
+    <div id="itinerary-detail" class="screen">
+      <div class="detail-header" id="detail-header" style="background:var(--teal);padding:0 0 24px;">
+        <div class="status-bar" style="color:var(--white);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 20px 0;display:flex;align-items:center;gap:12px;">
+          <button class="detail-back" onclick="goTo('itineraries')">←</button>
+          <div>
+            <div id="detail-plan-name" style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);">⭐ Optimized Plan</div>
+            <div id="detail-plan-meta" style="font-family:'Syne',sans-serif;font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;">7 days · 850 TND · ⭐ 4.9</div>
+          </div>
+        </div>
+        <div class="detail-map">🗺️ &nbsp; Interactive Map · Tunisia Route</div>
+      </div>
+      <div class="detail-content">
+        <div class="card-white">
+          <div class="section-label">BUDGET BREAKDOWN</div>
+          <div class="budget-row">
+            <div class="budget-row-top"><span class="budget-cat">Hotels</span><span class="budget-amt" id="bud-hotels">340 TND</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-hotels" style="width:40%;background:var(--teal);"></div></div>
+          </div>
+          <div class="budget-row">
+            <div class="budget-row-top"><span class="budget-cat">Food</span><span class="budget-amt" id="bud-food">213 TND</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-food" style="width:25%;background:var(--teal);"></div></div>
+          </div>
+          <div class="budget-row">
+            <div class="budget-row-top"><span class="budget-cat">Transport</span><span class="budget-amt" id="bud-transport">170 TND</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-transport" style="width:20%;background:var(--teal);"></div></div>
+          </div>
+          <div class="budget-row">
+            <div class="budget-row-top"><span class="budget-cat">Activities</span><span class="budget-amt" id="bud-activities">127 TND</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-activities" style="width:15%;background:var(--teal);"></div></div>
+          </div>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:var(--night);margin-bottom:12px;">DAY-BY-DAY PLAN</div>
+        <div class="day-card">
+          <div class="row" style="gap:10px;margin-bottom:12px;">
+            <div class="day-badge" id="dbadge0" style="background:rgba(13,110,92,0.13);color:var(--teal);">D1</div>
+            <div><div class="day-title">Arrival & Tunis Medina</div><div class="day-sub">Day 1</div></div>
+          </div>
+          <div class="day-item">🛬 Arrive Tunis-Carthage Airport</div>
+          <div class="day-item">🏨 Check-in Boutique Hotel</div>
+          <div class="day-item">🕌 Explore Medina (UNESCO)</div>
+          <div class="day-item">🍜 Dinner: Dar El Jeld</div>
+        </div>
+        <div class="day-card">
+          <div class="row" style="gap:10px;margin-bottom:12px;">
+            <div class="day-badge" id="dbadge1" style="background:rgba(13,110,92,0.13);color:var(--teal);">D2</div>
+            <div><div class="day-title">Ancient Carthage</div><div class="day-sub">Day 2</div></div>
+          </div>
+          <div class="day-item">☕ Breakfast with sea view</div>
+          <div class="day-item">🏛️ Carthage Ruins (VR tour)</div>
+          <div class="day-item">🔵 Sidi Bou Said Village</div>
+          <div class="day-item">🌅 Sunset at La Goulette</div>
+        </div>
+        <div class="day-card">
+          <div class="row" style="gap:10px;margin-bottom:12px;">
+            <div class="day-badge" id="dbadge2" style="background:rgba(13,110,92,0.13);color:var(--teal);">D3</div>
+            <div><div class="day-title">Coastal Drive South</div><div class="day-sub">Day 3</div></div>
+          </div>
+          <div class="day-item">🚗 Drive to Hammamet</div>
+          <div class="day-item">🏖️ Yasmine Beach morning</div>
+          <div class="day-item">🍽️ Lunch: seafood medina</div>
+          <div class="day-item">🎭 Evening cultural show</div>
+        </div>
+      </div>
+      <div class="detail-footer">
+        <button class="book-btn" onclick="goTo('booking')">BOOK THIS TRIP ✦</button>
+      </div>
+    </div>
+
+    <!-- ─── BOOKING ─── -->
+    <div id="booking" class="screen">
+      <div style="background:var(--night);padding:0 0 20px;flex-shrink:0;">
+        <div class="status-bar" style="color:var(--white);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 20px 0;display:flex;align-items:center;gap:12px;">
+          <button onclick="goTo('itinerary-detail')" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--white);">←</button>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);">Book Your Trip</div>
+        </div>
+      </div>
+      <div class="book-list">
+        <div class="book-item">
+          <div class="book-icon">🏨</div>
+          <div style="flex:1;"><div class="book-title">Hotel · Dar Ben Gacem</div><div class="book-sub">Tunis Medina · 4 nights</div></div>
+          <div style="text-align:right;"><div class="book-price">280 TND</div><div class="book-status" style="color:var(--green);">Available</div></div>
+        </div>
+        <div class="book-item">
+          <div class="book-icon">🏝️</div>
+          <div style="flex:1;"><div class="book-title">Resort · Djerba Palace</div><div class="book-sub">Djerba · 3 nights</div></div>
+          <div style="text-align:right;"><div class="book-price">390 TND</div><div class="book-status" style="color:var(--red);">2 left</div></div>
+        </div>
+        <div class="book-item">
+          <div class="book-icon">🚌</div>
+          <div style="flex:1;"><div class="book-title">Private Transfer</div><div class="book-sub">Airport → Hotel</div></div>
+          <div style="text-align:right;"><div class="book-price">45 TND</div><div class="book-status" style="color:var(--green);">Available</div></div>
+        </div>
+        <div class="book-item">
+          <div class="book-icon">🏛️</div>
+          <div style="flex:1;"><div class="book-title">Guided Carthage Tour</div><div class="book-sub">Half day · VR included</div></div>
+          <div style="text-align:right;"><div class="book-price">85 TND</div><div class="book-status" style="color:var(--green);">Available</div></div>
+        </div>
+      </div>
+      <div class="book-footer">
+        <div class="row sb" style="margin-bottom:14px;">
+          <span class="book-total-label">Total</span><span class="book-total-val">800 TND</span>
+        </div>
+        <button class="pay-btn">CONFIRM & PAY ✦</button>
+      </div>
+    </div>
+
+    <!-- ─── EXPLORE ─── -->
+    <div id="explore" class="screen">
+      <div class="explore-header">
+        <div class="status-bar" style="color:var(--white);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 20px 0;">
+          <div class="row sb" style="margin-bottom:14px;">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);">Explore Now</div>
+              <div style="font-family:'Syne',sans-serif;font-size:12px;color:var(--teal-light);margin-top:4px;">📍 Tunis · 24°C · Sunny</div>
+            </div>
+            <div style="background:rgba(13,110,92,0.19);border-radius:12px;padding:8px 14px;">
+              <span style="font-family:'Syne',sans-serif;font-size:12px;color:var(--teal-light);">🌿 Eco Mode ON</span>
+            </div>
+          </div>
+          <div class="filter-scroll" id="filter-chips"></div>
+        </div>
+      </div>
+      <div class="explore-list" id="explore-list"></div>
+      <div class="bottom-nav dark">
+        <button class="nav-item" onclick="goTo('home')"><span class="icon">⌂</span><span class="label">HOME</span></button>
+        <button class="nav-item active" onclick="goTo('explore')"><span class="icon">◎</span><span class="label">EXPLORE</span></button>
+        <button class="nav-item" onclick="goTo('museums')"><span class="icon">⬡</span><span class="label">MUSEUMS</span></button>
+        <button class="nav-item" onclick="goTo('home')"><span class="icon">◉</span><span class="label">PROFILE</span></button>
+      </div>
+    </div>
+
+    <!-- ─── LOCATION DETAIL ─── -->
+    <div id="location-detail" class="screen">
+      <div class="loc-hero" style="background:#4A3270;">
+        <div class="loc-hero-emoji">🏛️</div>
+        <button class="loc-back" id="loc-back-btn">←</button>
+        <div class="loc-info-bar">
+          <div class="loc-name">Bardo National Museum</div>
+          <div class="loc-meta">⭐ 4.8 · 3.2km · Open until 17:00</div>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:20px;">
+        <div class="loc-tags">
+          <span class="loc-tag">👥 Low Crowd</span>
+          <span class="loc-tag">🌿 Eco Pick</span>
+          <span class="loc-tag">🎧 AR Guide</span>
+        </div>
+        <div class="card-white" style="margin-bottom:14px;">
+          <p style="font-family:'Crimson Text',serif;font-size:16px;color:var(--night);line-height:1.6;">
+            Home to one of the world's finest mosaic collections, the Bardo houses over 1,000 years of Roman, Punic, and Byzantine artistry. The AI guide narrates every room in 8 languages.
+          </p>
+        </div>
+        <div class="card-white" style="margin-bottom:14px;">
+          <div class="section-label">TODAY'S CROWD FORECAST</div>
+          <div class="crowd-chart">
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:30%;background:var(--green);"></div><span class="crowd-bar-label">9h</span></div>
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:45%;background:var(--green);"></div><span class="crowd-bar-label">10h</span></div>
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:80%;background:var(--green);"></div><span class="crowd-bar-label">11h</span></div>
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:95%;background:var(--red);"></div><span class="crowd-bar-label">12h</span></div>
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:70%;background:var(--gold);"></div><span class="crowd-bar-label">13h</span></div>
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:50%;background:var(--gold);"></div><span class="crowd-bar-label">14h</span></div>
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:35%;background:var(--gold);"></div><span class="crowd-bar-label">15h</span></div>
+            <div class="crowd-bar"><div class="crowd-bar-inner" style="height:25%;background:var(--gold);"></div><span class="crowd-bar-label">16h</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="loc-footer">
+        <button class="loc-btn-dir">🗺️ DIRECTIONS</button>
+        <button class="loc-btn-ar">START AR GUIDE ✦</button>
+      </div>
+    </div>
+
+    <!-- ─── MUSEUMS ─── -->
+    <div id="museums" class="screen">
+      <div class="museums-header">
+        <div class="status-bar" style="color:var(--white);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 20px 0;">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:var(--white);">Smart Museums</div>
+          <div style="font-family:'Crimson Text',serif;font-size:15px;color:var(--teal-light);font-style:italic;margin-top:4px;">Step into 3,000 years of history</div>
+        </div>
+      </div>
+      <div class="mus-list">
+        <div class="mus-card" style="background:#3D1F6E;box-shadow:0 8px 24px rgba(61,31,110,0.5);" onclick="goTo('vr-experience')">
+          <div class="mus-bg-emoji">🏛️</div>
+          <div class="mus-badge">VR</div>
+          <div class="mus-name">Carthage Reborn</div>
+          <div class="mus-sub">VR · 3rd Century BCE</div>
+          <div class="mus-launch">LAUNCH EXPERIENCE →</div>
+        </div>
+        <div class="mus-card" style="background:#6E3D1F;box-shadow:0 8px 24px rgba(110,61,31,0.5);" onclick="goTo('vr-experience')">
+          <div class="mus-bg-emoji">🕌</div>
+          <div class="mus-badge">AR</div>
+          <div class="mus-name">Kairouan Medina</div>
+          <div class="mus-sub">AR Overlay · Islamic Art</div>
+          <div class="mus-launch">LAUNCH EXPERIENCE →</div>
+        </div>
+        <div class="mus-card" style="background:#1F3D6E;box-shadow:0 8px 24px rgba(31,61,110,0.5);" onclick="goTo('vr-experience')">
+          <div class="mus-bg-emoji">⚔️</div>
+          <div class="mus-badge">MR</div>
+          <div class="mus-name">El Djem Colosseum</div>
+          <div class="mus-sub">Mixed Reality · Roman Era</div>
+          <div class="mus-launch">LAUNCH EXPERIENCE →</div>
+        </div>
+        <div class="mus-card" style="background:#1F6E3D;box-shadow:0 8px 24px rgba(31,110,61,0.5);" onclick="goTo('vr-experience')">
+          <div class="mus-bg-emoji">🎨</div>
+          <div class="mus-badge">AI</div>
+          <div class="mus-name">Bardo Mosaics</div>
+          <div class="mus-sub">AI Audio Guide · 8 Languages</div>
+          <div class="mus-launch">LAUNCH EXPERIENCE →</div>
+        </div>
+      </div>
+      <div class="bottom-nav dark">
+        <button class="nav-item" onclick="goTo('home')"><span class="icon">⌂</span><span class="label">HOME</span></button>
+        <button class="nav-item" onclick="goTo('explore')"><span class="icon">◎</span><span class="label">EXPLORE</span></button>
+        <button class="nav-item active" onclick="goTo('museums')"><span class="icon">⬡</span><span class="label">MUSEUMS</span></button>
+        <button class="nav-item" onclick="goTo('home')"><span class="icon">◉</span><span class="label">PROFILE</span></button>
+      </div>
+    </div>
+
+    <!-- ─── VR EXPERIENCE ─── -->
+    <div id="vr-experience" class="screen" style="background:#0A0520;position:relative;overflow:hidden;">
+      <div class="vr-glow"></div>
+      <div class="vr-fade"></div>
+      <div class="vr-header">
+        <button class="vr-back" onclick="goTo('museums')">←</button>
+        <span class="vr-label">VR EXPERIENCE</span>
+        <div style="width:40px;"></div>
+      </div>
+      <div class="vr-center">
+        <div class="vr-emoji">🏛️</div>
+        <div class="vr-title">Carthage Reborn</div>
+        <div class="vr-sub">3rd Century BCE · Punic Capital at its Peak</div>
+        <div class="vr-stats">
+          <div><div class="vr-stat-val">8</div><div class="vr-stat-sub">LANGUAGES</div></div>
+          <div><div class="vr-stat-val">45</div><div class="vr-stat-sub">MINUTES</div></div>
+          <div><div class="vr-stat-val">All</div><div class="vr-stat-sub">AGES</div></div>
+        </div>
+        <button class="vr-play" id="vr-play-btn" onclick="toggleVR()" style="background:linear-gradient(135deg,#8040E0,#5020B0);box-shadow:0 0 40px rgba(128,64,224,0.5);">▶</button>
+        <div class="vr-play-label" id="vr-play-label">TAP TO BEGIN</div>
+      </div>
+      <div class="vr-footer">
+        <button class="vr-action">🎧 AUDIO GUIDE</button>
+        <button class="vr-action">📖 HISTORY</button>
+        <button class="vr-action">🌐 LANGUAGE</button>
+      </div>
+    </div>
+
+    <!-- ─── BUSINESS LOGIN ─── -->
+    <div id="business-login" class="screen">
+      <div class="status-bar" style="color:var(--white);">
+        <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="biz-content">
+        <button class="biz-back" onclick="goTo('home')">←</button>
+        <div style="font-size:48px;margin-bottom:16px;">📊</div>
+        <div class="biz-title">Business<br>Dashboard</div>
+        <div class="biz-sub">AI-powered visitor prediction &amp; demand analytics</div>
+        <div class="biz-field"><span>✉️</span><span>business@visitai.tn</span></div>
+        <div class="biz-field" style="margin-bottom:32px;"><span>🔒</span><span>••••••••</span></div>
+        <button class="biz-login" onclick="goTo('dashboard')">ACCESS DASHBOARD →</button>
+      </div>
+    </div>
+
+    <!-- ─── DASHBOARD ─── -->
+    <div id="dashboard" class="screen">
+      <div class="dash-header">
+        <div class="status-bar" style="color:var(--white);">
+          <span>9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+        </div>
+        <div style="padding:8px 20px 0;display:flex;align-items:center;gap:12px;">
+          <button onclick="goTo('home')" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--white);">←</button>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:11px;color:var(--teal-light);letter-spacing:2px;">VISIT.AI BUSINESS</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--white);margin-top:2px;">Dar Ben Gacem</div>
+          </div>
+          <div style="margin-left:auto;" class="dash-plan-badge">PRO PLAN</div>
+        </div>
+      </div>
+      <div class="dash-content">
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-icon">👥</div><div class="kpi-val">142</div><div class="kpi-label">Today's Visitors</div><div class="kpi-delta" style="color:var(--teal);">+18%</div></div>
+          <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-val">1,204</div><div class="kpi-label">This Week</div><div class="kpi-delta" style="color:var(--gold);">+11%</div></div>
+          <div class="kpi-card"><div class="kpi-icon">⏰</div><div class="kpi-val">14:00</div><div class="kpi-label">Peak Hour</div><div class="kpi-delta" style="color:#4A3270;">High demand</div></div>
+          <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-val">3,840 TND</div><div class="kpi-label">Revenue Est.</div><div class="kpi-delta" style="color:var(--green);">This month</div></div>
+        </div>
+        <div class="card-white" style="margin-bottom:16px;">
+          <div class="section-label">7-DAY VISITOR FORECAST</div>
+          <div class="chart-bars" id="dash-chart"></div>
+          <div class="chart-legend">
+            <div class="row" style="gap:4px;"><div class="legend-dot" style="background:var(--teal);"></div><span class="legend-label">Weekdays</span></div>
+            <div class="row" style="gap:4px;"><div class="legend-dot" style="background:var(--gold);"></div><span class="legend-label">Weekend</span></div>
+          </div>
+        </div>
+        <div class="ai-insight">
+          <span style="font-size:24px;">🤖</span>
+          <div><div class="ai-label">AI INSIGHT</div>
+          <p class="ai-text">Demand is forecast to spike <strong>+62%</strong> this Saturday (Carthage Festival). Consider adding 2 extra staff and offering a pre-booking discount now.</p></div>
+        </div>
+        <div class="sub-card">
+          <div><div class="sub-plan">Pro Plan</div><div class="sub-renew">Renews Mar 1 · 349 TND/month</div></div>
+          <button class="sub-manage">MANAGE</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phone-inner -->
+</div><!-- /phone -->
+
+<!-- SCREEN NAVIGATION BUTTONS -->
+<div class="nav-buttons">
+  <button class="nav-btn" data-screen="home" onclick="goTo('home')">🏠 Home</button>
+  <button class="nav-btn" data-screen="trip-wizard" onclick="goTo('trip-wizard')">✈️ Trip Planner</button>
+  <button class="nav-btn" data-screen="explore" onclick="goTo('explore')">📍 Explore</button>
+  <button class="nav-btn" data-screen="museums" onclick="goTo('museums')">🏛️ Museums</button>
+  <button class="nav-btn" data-screen="dashboard" onclick="goTo('dashboard')">📊 Business</button>
+</div>
+
+<script>
+  // ─── STATE ───
+  let currentScreen = 'splash';
+  let selectedPlan = null;
+  const plans = [
+    {label:'Optimized',icon:'⭐',tag:'BEST MATCH',color:'#0D6E5C',price:'850',rating:'4.9',days:7},
+    {label:'Discovery',icon:'💎',tag:'HIDDEN GEMS',color:'#6B4E3D',price:'820',rating:'4.7',days:7},
+    {label:'Premium',icon:'✨',tag:'+15% UPGRADE',color:'#4A3270',price:'1080',rating:'5.0',days:7},
+  ];
+
+  // ─── NAVIGATE ───
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    currentScreen = id;
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.screen === id);
+    });
+    if (id === 'explore') initExplore();
+    if (id === 'dashboard') initDashboard();
+    if (id === 'trip-wizard') initWizard();
+    if (id === 'generating') startGeneration();
+    if (id === 'location-detail') {
+      const prev = ['explore','home','museums'].find(s=>s===currentScreen)||'explore';
+      document.getElementById('loc-back-btn').onclick = ()=>goTo(prev);
+    }
+  }
+
+  // ─── SPLASH → ONBOARDING ───
+  setTimeout(() => goTo('onboarding'), 2200);
+
+  // ─── ONBOARDING ───
+  const slides = [
+    {emoji:'🗺️',title:'Plan Your\nPerfect Trip',sub:'AI crafts personalized itineraries across beaches, deserts, history & culture',bg:'#0D6E5C'},
+    {emoji:'◎',title:'Explore\nIn Real-Time',sub:'GPS-powered recommendations adapt to your location, weather & mood',bg:'#084D40'},
+    {emoji:'🏛️',title:'Step Into\nHistory',sub:'VR & AR bring Carthage, Kairouan and El Djem to life around you',bg:'#0A1F1C'},
+  ];
+  let obStep = 0;
+
+  function renderOb() {
+    const s = slides[obStep];
+    document.getElementById('onboarding').style.background = s.bg;
+    document.getElementById('ob-emoji').textContent = s.emoji;
+    document.getElementById('ob-title').style.whiteSpace = 'pre-line';
+    document.getElementById('ob-title').textContent = s.title;
+    document.getElementById('ob-sub').textContent = s.sub;
+    document.getElementById('ob-btn').textContent = obStep < slides.length-1 ? 'CONTINUE' : 'GET STARTED';
+    const dots = document.getElementById('ob-dots');
+    dots.innerHTML = slides.map((_,i) =>
+      `<div class="dot ${i===obStep?'active':'inactive'}"></div>`
+    ).join('');
+  }
+  document.getElementById('ob-btn').onclick = () => {
+    if (obStep < slides.length-1) { obStep++; renderOb(); }
+    else goTo('home');
+  };
+  renderOb();
+
+  // ─── WIZARD ───
+  let wizStep = 0;
+  let wizForm = {dates:'',budget:1,activities:[],travelType:''};
+
+  const wizSteps = [
+    {
+      title:"When are you\ntravelling?",
+      render: () => {
+        const dates=[['Feb 28','Mar 7'],['Mar 15','Mar 22'],['Apr 5','Apr 12'],null];
+        return `<div class="date-grid">${dates.map((d,i)=>{
+          const key=d?`${d[0]} – ${d[1]}`:'Custom';
+          return `<div class="date-card${wizForm.dates===key?' sel':''}" onclick="pickDate('${key}')">
+            ${d?`<div class="date-from">${d[0]}</div><div class="date-to">to ${d[1]}</div>`:'📅 Custom'}
+          </div>`;
+        }).join('')}</div>`;
+      }
+    },
+    {
+      title:"What's your\nbudget?",
+      render: () => {
+        return ['Budget','Standard','Premium','Luxury'].map((b,i)=>
+          `<div class="budget-btn${wizForm.budget===i?' sel':''}" onclick="pickBudget(${i})">
+            <span>${b}</span>
+            <span class="budget-dots">${'●'.repeat(i+1)}${'○'.repeat(3-i)}</span>
+          </div>`
+        ).join('');
+      }
+    },
+    {
+      title:"What do you\nlove doing?",
+      render: () => {
+        const acts=['🏖️ Beach','🏛️ History','🏜️ Desert','🎭 Festivals','🍽️ Food','🧗 Adventure','🌿 Nature','🎨 Arts'];
+        return `<div class="act-wrap">${acts.map(a=>
+          `<div class="act-chip${wizForm.activities.includes(a)?' sel':''}" onclick="toggleAct('${a}')">${a}</div>`
+        ).join('')}</div>`;
+      }
+    },
+    {
+      title:"Who are you\ntravelling with?",
+      render: () => {
+        const types=['✈️ Solo','💑 Couple','👨‍👩‍👧 Family','👥 Group'];
+        return `<div class="travel-grid">${types.map(t=>{
+          const [icon,...rest]=t.split(' ');
+          return `<div class="travel-btn${wizForm.travelType===t?' sel':''}" onclick="pickTravel('${t}')">
+            <div class="travel-icon">${icon}</div><div>${rest.join(' ')}</div>
+          </div>`;
+        }).join('')}</div>`;
+      }
+    }
+  ];
+
+  function initWizard() {
+    wizStep = 0;
+    renderWizard();
+  }
+  function renderWizard() {
+    document.getElementById('wiz-step-label').textContent = `STEP ${wizStep+1} OF ${wizSteps.length}`;
+    document.getElementById('wiz-step-title').textContent = wizSteps[wizStep].title;
+    document.getElementById('wiz-body').innerHTML = wizSteps[wizStep].render();
+    document.getElementById('wiz-next-btn').textContent = wizStep<wizSteps.length-1?'CONTINUE →':'GENERATE MY TRIP ✦';
+    const pb = document.getElementById('wiz-progress');
+    pb.innerHTML = wizSteps.map((_,i)=>`<div class="prog-seg${i<=wizStep?' done':''}"></div>`).join('');
+  }
+  function wizardNext() {
+    if(wizStep<wizSteps.length-1){wizStep++;renderWizard();}
+    else goTo('generating');
+  }
+  window.pickDate=(k)=>{wizForm.dates=k;renderWizard();};
+  window.pickBudget=(i)=>{wizForm.budget=i;renderWizard();};
+  window.toggleAct=(a)=>{
+    const idx=wizForm.activities.indexOf(a);
+    if(idx>-1)wizForm.activities.splice(idx,1);else wizForm.activities.push(a);
+    renderWizard();
+  };
+  window.pickTravel=(t)=>{wizForm.travelType=t;renderWizard();};
+
+  // ─── GENERATING ───
+  function startGeneration() {
+    const labels=['Analyzing your preferences...','Checking weather & events...','Optimizing routes...','Balancing your budget...','Crafting 3 itineraries...','Almost ready ✦'];
+    let prog=0;
+    const interval=setInterval(()=>{
+      prog=Math.min(prog+17,100);
+      const li=Math.min(Math.floor(prog/17),labels.length-1);
+      document.getElementById('gen-label').textContent=labels[li];
+      document.getElementById('gen-fill').style.width=prog+'%';
+      document.getElementById('gen-pct').textContent=prog+'%';
+      const deg=prog*3.6;
+      document.getElementById('gen-ring').style.background=
+        `conic-gradient(#1A9B84 ${deg}deg,rgba(255,255,255,0.08) 0deg)`;
+      if(prog>=100){clearInterval(interval);setTimeout(()=>goTo('itineraries'),600);}
+    },400);
+  }
+
+  // ─── SELECT PLAN ───
+  window.selectPlan=(idx)=>{
+    selectedPlan=plans[idx];
+    // Update detail header
+    document.getElementById('detail-header').style.background=selectedPlan.color;
+    document.getElementById('detail-plan-name').textContent=`${selectedPlan.icon} ${selectedPlan.label} Plan`;
+    document.getElementById('detail-plan-meta').textContent=`7 days · ${selectedPlan.price} TND · ⭐ ${selectedPlan.rating}`;
+    // Budget bars color
+    ['hotels','food','transport','activities'].forEach(k=>{
+      const el=document.getElementById(`bar-${k}`);
+      if(el)el.style.background=selectedPlan.color;
+    });
+    // Budget amounts
+    const p=parseInt(selectedPlan.price);
+    document.getElementById('bud-hotels').textContent=Math.round(p*0.4)+' TND';
+    document.getElementById('bud-food').textContent=Math.round(p*0.25)+' TND';
+    document.getElementById('bud-transport').textContent=Math.round(p*0.2)+' TND';
+    document.getElementById('bud-activities').textContent=Math.round(p*0.15)+' TND';
+    // Day badges color
+    [0,1,2].forEach(i=>{
+      const el=document.getElementById(`dbadge${i}`);
+      if(el){el.style.background=selectedPlan.color+'20';el.style.color=selectedPlan.color;}
+    });
+    goTo('itinerary-detail');
+  };
+
+  // ─── EXPLORE ───
+  const exploreItems=[
+    {name:'Bardo National Museum',dist:'3.2km',crowd:'Low',time:'Open',tag:'Museums',emoji:'🏛️',color:'#4A3270',co2:'Low'},
+    {name:'La Marsa Beach',dist:'8km',crowd:'Medium',time:'Open',tag:'Beaches',emoji:'🏖️',color:'#1A6B8A',co2:'Very Low'},
+    {name:'Café Saf-Saf',dist:'1.1km',crowd:'Low',time:'Open',tag:'Food',emoji:'☕',color:'#7A4F2A',co2:'Low'},
+    {name:'Carthage Festival Stage',dist:'12km',crowd:'High',time:'Tonight',tag:'Events',emoji:'🎭',color:'#2A6B3A',co2:'Medium'},
+    {name:'Sidi Bou Said',dist:'14km',crowd:'Medium',time:'Open',tag:'Gems',emoji:'🏘️',color:'#1A5A8A',co2:'Low'},
+  ];
+  const crowdColors={Low:'#2EAF7D',Medium:'#D4922A',High:'#E05252'};
+  let activeFilter='All';
+
+  function initExplore(){
+    const filters=['All','Museums','Beaches','Food','Events','Gems'];
+    const chips=document.getElementById('filter-chips');
+    chips.innerHTML=filters.map(f=>
+      `<button class="filter-chip${f===activeFilter?' active':''}" onclick="setFilter('${f}')">${f}</button>`
+    ).join('');
+    renderExploreList();
+  }
+  window.setFilter=(f)=>{activeFilter=f;initExplore();};
+  function renderExploreList(){
+    const shown=activeFilter==='All'?exploreItems:exploreItems.filter(i=>i.tag===activeFilter);
+    document.getElementById('explore-list').innerHTML=shown.map(item=>`
+      <div class="exp-card" onclick="goLocDetail()">
+        <div class="exp-thumb" style="background:${item.color};">${item.emoji}</div>
+        <div class="exp-info">
+          <div class="row sb"><span class="exp-name">${item.name}</span><span class="exp-dist">${item.dist}</span></div>
+          <div class="row" style="gap:8px;margin-top:8px;">
+            <span class="exp-crowd" style="color:${crowdColors[item.crowd]};">● ${item.crowd} Crowd</span>
+            <span class="exp-time">· ${item.time}</span>
+            <span class="exp-co2" style="margin-left:auto;">🌿 CO₂ ${item.co2}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  window.goLocDetail=()=>{
+    document.getElementById('loc-back-btn').onclick=()=>goTo('explore');
+    goTo('location-detail');
+  };
+
+  // ─── DASHBOARD CHART ───
+  function initDashboard(){
+    const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const vals=[82,120,95,140,200,310,270];
+    const maxVal=Math.max(...vals);
+    document.getElementById('dash-chart').innerHTML=days.map((d,i)=>`
+      <div class="chart-col">
+        <div class="chart-val-label">${vals[i]}</div>
+        <div class="chart-bar-inner" style="height:${(vals[i]/maxVal)*64}px;background:${i>=5?'#D4922A':'#0D6E5C'};"></div>
+        <span class="chart-day">${d}</span>
+      </div>
+    `).join('');
+  }
+
+  // ─── VR TOGGLE ───
+  let vrPlaying=false;
+  window.toggleVR=()=>{
+    vrPlaying=!vrPlaying;
+    const btn=document.getElementById('vr-play-btn');
+    const lbl=document.getElementById('vr-play-label');
+    if(vrPlaying){
+      btn.textContent='⏸';
+      btn.style.background='linear-gradient(135deg,#D4922A,#F0B84A)';
+      btn.style.boxShadow='0 0 40px rgba(212,146,42,0.5)';
+      lbl.textContent='EXPERIENCE PLAYING...';
+    } else {
+      btn.textContent='▶';
+      btn.style.background='linear-gradient(135deg,#8040E0,#5020B0)';
+      btn.style.boxShadow='0 0 40px rgba(128,64,224,0.5)';
+      lbl.textContent='TAP TO BEGIN';
+    }
+  };
+
+</script>
+</body>
+</html>
