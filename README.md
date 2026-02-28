@@ -7,6 +7,7 @@ A clean, self-contained version of the platform. No Docker, no Redis, no Celery.
 ❗❗❗
 👉 https://drive.google.com/file/d/16niQtdvZhS8kyX-2X_nA2rfTXs74RtAr/view?usp=sharing
 ❗❗❗
+https://www.canva.com/design/DAHCjVYotQo/71QG8KqZNx9GLCB_Vh0cnA/edit?fbclid=IwY2xjawQPX0hleHRuA2FlbQIxMABicmlkETEweW9NaU5EeEJlSnZ1cWhic3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHu07G6KKIsrpBVxuNzU9S8A7z2Ye39EcNgXavvH8IiLpJ-NOMDBXtYU0mBAD_aem_nQLbTVdpDtEj_VY2OscOLg
 
 ## Project Structure
 
